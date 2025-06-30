@@ -3,14 +3,12 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
 	"strings"
 
 	"github.com/github/github-mcp-server/internal/ghmcp"
 	"github.com/github/github-mcp-server/pkg/github"
 	"github.com/github/github-mcp-server/pkg/ssecmd"
-	mcpserv "github.com/mark3labs/mcp-go/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
@@ -63,14 +61,7 @@ var (
 				return err
 			}
 
-			sseServer := mcpserv.NewSSEServer(
-				server.GetMcpServer(),
-				mcpserv.WithStaticBasePath(viper.GetString("base-path")),
-			)
-			mux := http.NewServeMux()
-			mux.Handle("/v1/mcp/github/sse", sseServer.SSEHandler())
-			mux.Handle("/v1/mcp/github/message", sseServer.MessageHandler())
-			return http.ListenAndServe(viper.GetString("address"), mux)
+			return server.Start()
 		},
 	}
 

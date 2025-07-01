@@ -9,7 +9,6 @@ import (
 
 	"github.com/github/github-mcp-server/internal/ghmcp"
 	"github.com/mark3labs/mcp-go/server"
-	"github.com/sirupsen/logrus"
 )
 
 // Config holds all configuration options for the SSE server
@@ -18,7 +17,6 @@ type Config struct {
 	Host            string
 	Address         string
 	BasePath        string
-	LogFilePath     string
 	EnabledToolsets []string
 	DynamicToolsets bool
 	ReadOnly        bool
@@ -45,18 +43,6 @@ type Server struct {
 func NewServer(config Config) (*Server, error) {
 	if config.Token == "" {
 		return nil, errors.New("GitHub personal access token not set")
-	}
-
-	// Configure logging
-	if config.LogFilePath != "" {
-		file, err := os.OpenFile(config.LogFilePath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0600)
-		if err != nil {
-			return nil, fmt.Errorf("failed to open log file: %w", err)
-		}
-		logger := logrus.New()
-		logger.SetOutput(file)
-		logger.SetLevel(logrus.DebugLevel)
-		logrus.SetOutput(file) // Set global logger output as well
 	}
 
 	// Create a translation helper function
@@ -129,13 +115,6 @@ func WithAddress(address string) ServerOption {
 func WithBasePath(basePath string) ServerOption {
 	return func(c *Config) {
 		c.BasePath = basePath
-	}
-}
-
-// WithLogFilePath sets the log file path for the SSE server
-func WithLogFilePath(logFilePath string) ServerOption {
-	return func(c *Config) {
-		c.LogFilePath = logFilePath
 	}
 }
 

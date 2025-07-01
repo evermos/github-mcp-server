@@ -51,7 +51,6 @@ var (
 				ssecmd.WithHost(viper.GetString("host")),
 				ssecmd.WithAddress(viper.GetString("address")),
 				ssecmd.WithBasePath(viper.GetString("base-path")),
-				ssecmd.WithLogFilePath(viper.GetString("log-file")),
 				ssecmd.WithDynamicToolsets(viper.GetBool("dynamic_toolsets")),
 				ssecmd.WithReadOnly(viper.GetBool("read-only")),
 				ssecmd.WithEnabledToolsets(enabledToolsets),
